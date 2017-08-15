@@ -11,4 +11,6 @@ public interface UserRepository extends PagingAndSortingRepository<UserAuth, Lon
 
     List<UserAuth> findAllByOrderByCreatedAtDesc();
 
+    UserAuth findByEmail(String email);
+
 }

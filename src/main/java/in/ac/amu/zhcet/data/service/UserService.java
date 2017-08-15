@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -53,4 +54,13 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public UserAuth getUserByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    public void changeUserPassword(UserAuth userAuth, String password) {
+        //UserAuth userAuth = userRepository.findByUserId(user.getUsername());
+        userAuth.setPassword(UserAuth.PASSWORD_ENCODER.encode(password));
+        userRepository.save(userAuth);
+    }
 }
