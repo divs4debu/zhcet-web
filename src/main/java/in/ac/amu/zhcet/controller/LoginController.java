@@ -1,8 +1,6 @@
 package in.ac.amu.zhcet.controller;
 
-
 import in.ac.amu.zhcet.data.model.PasswordResetToken;
-import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.model.dto.PasswordDto;
 import in.ac.amu.zhcet.data.service.EmailService;
 import in.ac.amu.zhcet.data.service.PasswordResetService;
@@ -33,20 +31,20 @@ public class LoginController {
         this.userService = userService;
     }
 
-    @GetMapping("/login/forget_password")
+    @GetMapping("/login/forgot_password")
     public String getForgetPassword() {
-        return "forget_password";
+        return "forgot_password";
     }
 
-    @PostMapping("/login/forget_password")
+    @PostMapping("/login/forgot_password")
     public String sendEmailLink(RedirectAttributes redirectAttributes, @RequestParam String email, HttpServletRequest request) {
         try {
             PasswordResetToken token = passwordResetService.generate(email);
             emailService.constructResetTokenEmail(getAppUrl(request), token.getToken(), token.getUserAuth());
-
+            redirectAttributes.addFlashAttribute("reset_link_sent", true);
         }catch(UsernameNotFoundException e){
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/login/forget_password";
+            return "redirect:/login/forgot_password";
         }
 
         return "redirect:/login";
@@ -70,10 +68,10 @@ public class LoginController {
             redirectAttributes.addFlashAttribute("save_errors", "Password Don't match");
             return "redirect:/login/reset_password";
         }
-        UserAuth user = (UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userService.changeUserPassword(user, passwordDto.getNewPassword());
-        redirectAttributes.addFlashAttribute("success", "Your Password is successfully updated");
-        return "login";
+        redirectAttributes.addFlashAttribute("reset_success", true);
+        return "redirect:/login";
     }
     private String getAppUrl(HttpServletRequest request) {
         return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();

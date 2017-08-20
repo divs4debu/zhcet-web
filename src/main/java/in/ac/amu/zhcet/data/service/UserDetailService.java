@@ -38,14 +38,10 @@ public class UserDetailService implements UserDetailsService {
         if (user == null)
             throw new UsernameNotFoundException(username);
 
-        return new CustomUser(user.getUserId(), user.getPassword(), getAuthorities(user.getRoles()))
-                .name(user.getName())
-                .avatar(user.getDetails().getAvatarUrl())
-                .type(user.getType())
-                .department(user.getDetails().getDepartment());
+        return CustomUser.fromUserAuth(user);
     }
 
-    private static Collection<? extends GrantedAuthority> getAuthorities(String... roles) {
+    public static Collection<? extends GrantedAuthority> getAuthorities(String... roles) {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
         for (String role: roles)

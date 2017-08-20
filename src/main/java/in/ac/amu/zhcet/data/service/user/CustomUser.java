@@ -2,6 +2,8 @@ package in.ac.amu.zhcet.data.service.user;
 
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.base.user.Type;
+import in.ac.amu.zhcet.data.model.base.user.UserAuth;
+import in.ac.amu.zhcet.data.service.UserDetailService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,6 +42,14 @@ public class CustomUser extends User {
     public CustomUser department(Department department) {
         setDepartment(department);
         return this;
+    }
+
+    public static CustomUser fromUserAuth(UserAuth user) {
+        return new CustomUser(user.getUserId(), user.getPassword(), UserDetailService.getAuthorities(user.getRoles()))
+                .name(user.getName())
+                .avatar(user.getDetails().getAvatarUrl())
+                .type(user.getType())
+                .department(user.getDetails().getDepartment());
     }
 
 }

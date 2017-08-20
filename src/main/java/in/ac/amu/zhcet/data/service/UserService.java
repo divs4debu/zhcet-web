@@ -58,8 +58,9 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public void changeUserPassword(UserAuth userAuth, String password) {
-        //UserAuth userAuth = userRepository.findByUserId(user.getUsername());
+    @Transactional
+    public void changeUserPassword(User user, String password) {
+        UserAuth userAuth = userRepository.findByUserId(user.getUsername());
         userAuth.setPassword(UserAuth.PASSWORD_ENCODER.encode(password));
         userRepository.save(userAuth);
     }

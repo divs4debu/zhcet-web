@@ -2,9 +2,8 @@ package in.ac.amu.zhcet.data.service;
 
 import in.ac.amu.zhcet.data.model.PasswordResetToken;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
-import in.ac.amu.zhcet.data.repository.FacultyRepository;
 import in.ac.amu.zhcet.data.repository.PasswordResetTokenRepository;
-import in.ac.amu.zhcet.data.repository.StudentRepository;
+import in.ac.amu.zhcet.data.service.user.CustomUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,7 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class PasswordResetService {
@@ -38,7 +39,7 @@ public class PasswordResetService {
         if ((passwordResetToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0) {
             return "Token: "+token+" for User: "+id+" has expired";
         }
-        UserAuth user = passwordResetToken.getUserAuth();
+        CustomUser user = CustomUser.fromUserAuth(passwordResetToken.getUserAuth());
         Authentication auth = new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
         SecurityContextHolder.getContext().setAuthentication(auth);
         return null;

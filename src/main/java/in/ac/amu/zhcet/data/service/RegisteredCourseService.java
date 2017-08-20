@@ -1,7 +1,6 @@
 package in.ac.amu.zhcet.data.service;
 
 import in.ac.amu.zhcet.data.model.*;
-import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
 import in.ac.amu.zhcet.data.repository.AttendanceRepository;
 import in.ac.amu.zhcet.data.repository.CourseRegistrationRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
